@@ -1,0 +1,111 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Data\emojis.txt" />
+    <None Remove="Views\NotesPage.xaml~RF1c398314.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Data\emojis.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ColorPicker.Xamarin.Forms" Version="1.3.4.21" />
+    <PackageReference Include="com.nitrocrime.XamarinPainter.Forms" Version="0.1.65-beta" />
+    <PackageReference Include="Plugin.Fingerprint" Version="3.0.0-beta.1" />
+    <PackageReference Include="Plugin.Permissions" Version="6.0.1" />
+    <PackageReference Include="Rg.Plugins.Popup" Version="2.1.0" />
+    <PackageReference Include="SkiaSharp.Views.Forms" Version="2.88.0-preview.256" />
+    <PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />
+    <PackageReference Include="Xam.Plugin.Media" Version="5.1.1-beta" />
+    <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.2" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />
+    <PackageReference Include="Xamarin.Plugin.Calendar" Version="2.0.9699" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Drawing.Common">
+      <HintPath>C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v1.0\Facades\System.Drawing.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.XamarinForms.Common">
+      <HintPath>C:\Program Files (x86)\Progress\Telerik UI for Xamarin R1 2022\Binaries\Portable\Telerik.XamarinForms.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.XamarinForms.DataControls">
+      <HintPath>C:\Program Files (x86)\Progress\Telerik UI for Xamarin R1 2022\Binaries\Portable\Telerik.XamarinForms.DataControls.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.XamarinForms.ImageEditor">
+      <HintPath>C:\Program Files (x86)\Progress\Telerik UI for Xamarin R1 2022\Binaries\Portable\Telerik.XamarinForms.ImageEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.XamarinForms.Primitives">
+      <HintPath>C:\Program Files (x86)\Progress\Telerik UI for Xamarin R1 2022\Binaries\Portable\Telerik.XamarinForms.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.XamarinForms.RichTextEditor">
+      <HintPath>C:\Program Files (x86)\Progress\Telerik UI for Xamarin R1 2022\Binaries\Portable\Telerik.XamarinForms.RichTextEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.XamarinForms.SkiaSharp">
+      <HintPath>C:\Program Files (x86)\Progress\Telerik UI for Xamarin R1 2022\Binaries\Portable\Telerik.XamarinForms.SkiaSharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="AppShell.xaml.cs">
+      <DependentUpon>AppShell.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Themes\GreenAccent.xaml.cs">
+      <DependentUpon>GreenAccent.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Themes\PurpleAccent.xaml.cs">
+      <DependentUpon>PurpleAccent.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Themes\BlueAccent.xaml.cs">
+      <DependentUpon>BlueAccent.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Themes\SalmonAccent.xaml.cs">
+      <DependentUpon>SalmonAccent.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Themes\RedAccent.xaml.cs">
+      <DependentUpon>RedAccent.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CategoryPopup.xaml.cs">
+      <DependentUpon>CategoryPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\PaintingPage.xaml.cs">
+      <DependentUpon>PaintingPage.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Update="Views\PincodePage.xaml.cs">
+      <DependentUpon>PincodePage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Controls\ContextMenuPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\CategoryPopup.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\NoteEntryPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\NotesListPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\PincodePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\SearchPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\SettingsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

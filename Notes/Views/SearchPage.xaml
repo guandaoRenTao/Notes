@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cust="clr-namespace:Notes.Controls"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit" 
+             xmlns:conv="clr-namespace:Notes.Helpers"
+             x:Class="Notes.Views.SearchPage"  Shell.PresentationMode="Modal">
+    <ContentPage.Resources>
+        <Style TargetType="Frame" x:Key="ElemStyle">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="{DynamicResource TileSelectionColor}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+        <Style x:Key="LabelIcon" TargetType="Label">
+            <Setter Property="FontFamily" Value="{StaticResource Fontello}"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="Margin" Value="10,0,0,0"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+        <Style x:Key="ButtonIcon" TargetType="Button">
+            <Setter Property="FontFamily" Value="{StaticResource Fontello}"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="WidthRequest" Value="30"/>
+            <Setter Property="HeightRequest" Value="30"/>
+        </Style>
+        <ResourceDictionary>
+            <conv:HTMLToStr x:Key="html"/>
+            <conv:HeightConverter x:Key="height"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid Margin="10,30,10,0" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Padding="2" xct:CornerRadiusEffect.CornerRadius="30"
+                     BackgroundColor="{DynamicResource TileBackgroundColor}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Style="{StaticResource LabelIcon}" Text="{StaticResource searchIcon}"/>
+            <cust:CustomEntry Placeholder="Поиск" PlaceholderColor="#a0555555" x:Name="searchBar" Grid.Column="1"
+                   TextChanged="SearchBar_TextChanged">
+            </cust:CustomEntry>
+            <Button Grid.Column="2" IsVisible="{Binding IsClearVisible}" Command="{Binding ClearCommand}"  Style="{StaticResource ButtonIcon}" 
+                   Text="{StaticResource clearIcon}">
+                <!--<Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ClearCommand}"/>
+                </Label.GestureRecognizers>-->
+            </Button>
+        </Grid>
+        <CollectionView Grid.Row="1" x:Name="MyListView" Margin="5" Opacity="0"
+            ItemsSource="{Binding Items}" SelectionMode="Single" 
+                    SelectionChanged="OnSelectionChanged" >
+            <CollectionView.ItemsLayout >
+                <GridItemsLayout Orientation="Vertical" HorizontalItemSpacing="10" VerticalItemSpacing="10"/>
+            </CollectionView.ItemsLayout>
+            <!--Built in Cells-->
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <!--xct:TouchEffect.Command="{Binding  PressCommand, Source={RelativeSource AncestorType={x:Type Page}}}"
+                               xct:TouchEffect.CommandParameter="{Binding .}"-->
+                    <Frame Padding="0" Margin="5" CornerRadius="5"
+                            xct:TouchEffect.LongPressDuration="500"
+                               xct:TouchEffect.PressedScale="0.97"
+                               xct:TouchEffect.AnimationDuration="150"
+                            BackgroundColor="{DynamicResource TileBackgroundColor}"
+                                   Style="{StaticResource ElemStyle}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <Label LineBreakMode="TailTruncation" FontAttributes="Bold,Italic" Grid.Row="0" Text="{Binding Name}" HorizontalOptions="Center" Padding="10,5,10,0">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding Name}" Value="">
+                                        <Setter Property="IsVisible" Value="False"/>
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Line Margin="0" Grid.Row="1" BackgroundColor="#13808080" >
+                                <Line.Triggers>
+                                    <DataTrigger TargetType="Line" Binding="{Binding Name}" Value="">
+                                        <Setter Property="IsVisible" Value="False"/>
+                                    </DataTrigger>
+                                </Line.Triggers>
+                            </Line>
+                            <Label MaxLines="6" Grid.Row="2" Padding="10,0,10,1" HorizontalOptions="Start" VerticalOptions="Start"
+                                Text="{Binding Text, Converter={StaticResource html}}"
+                                LineBreakMode="TailTruncation" >
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding Name}" Value="">
+                                        <Setter Property="Grid.Row" Value="0"/>
+                                        <Setter Property="Grid.RowSpan" Value="3"/>
+                                        <Setter Property="Padding" Value="15"/>
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Line Margin="0" Grid.Row="3" BackgroundColor="#13808080" />
+                            <Label Grid.Row="4" FontSize="Micro" Padding="0,0,10,5"
+                                Text="{Binding Date, StringFormat='{}{0:H:mm    d MMMM yyyy}'}"
+                                FontAttributes="Italic" HorizontalOptions="End" VerticalOptions="End"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <StackLayout Padding="0,200,0,0" x:Name="EmptyImage" >
+                    <Label TextColor="#a0555555" Text="{StaticResource emptyBoxIcon}" FontSize="50" HorizontalOptions="Center" VerticalOptions="Center" FontFamily="{StaticResource Fontello}" />
+                    <Label TextColor="#a0555555" Text="Заметок нет" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center" />
+                </StackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+    </Grid>
+</ContentPage>

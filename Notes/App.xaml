@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:telerikRichTextEditor="clr-namespace:Telerik.XamarinForms.RichTextEditor;assembly=Telerik.XamarinForms.RichTextEditor"
+             xmlns:telerikDataControls="clr-namespace:Telerik.XamarinForms.DataControls;assembly=Telerik.XamarinForms.DataControls"
+             xmlns:cust="clr-namespace:Notes.Controls"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             Shell.NavBarIsVisible="False"
+             x:Class="Notes.App">
+
+    <!-- Resources used by multiple pages in the application -->
+    <Application.Resources>
+        <ResourceDictionary >
+            <ResourceDictionary Source="Themes/DarkTheme.xaml"/>
+        </ResourceDictionary>
+        <Thickness x:Key="PageMargin">20</Thickness>
+
+        <x:String x:Key="tintIcon">&#xe80e;</x:String>
+        <x:String x:Key="eraserIcon">&#xf12d;</x:String>
+        <x:String x:Key="redoIcon">&#xe811;</x:String>
+        <x:String x:Key="undoIcon">&#xe810;</x:String>
+        <x:String x:Key="brushIcon">&#xf1fc;</x:String>
+        <x:String x:Key="tagIcon">&#xe80f;</x:String>
+        <x:String x:Key="menuIcon">&#xf0c9;</x:String>
+        <x:String x:Key="toolIcon">&#xf142;</x:String>
+        <x:String x:Key="emptyBoxIcon">&#xe805;</x:String>
+        <x:String x:Key="clearIcon">&#xe806;</x:String>
+        <x:String x:Key="refreshIcon">&#xe800;</x:String>
+        <x:String x:Key="deleteIcon">&#xe803;</x:String>
+        <x:String x:Key="plusIcon">&#xe808;</x:String>
+        <x:String x:Key="okIcon">&#xe804;</x:String>
+        <x:String x:Key="settingsIcon">&#xe801;</x:String>
+        <x:String x:Key="pencilIcon">&#xe802;</x:String>
+        <x:String x:Key="backSpaceIcon">&#xe809;</x:String>
+        <x:String x:Key="backIcon">&#xe807;</x:String>
+        <x:String x:Key="folderIcon">&#xe80b;</x:String>
+        <x:String x:Key="moonIcon">&#xe80c;</x:String>
+        <x:String x:Key="sunIcon">&#xe80d;</x:String>
+        <x:String x:Key="searchIcon">&#xe80a;</x:String>
+
+        <!-- Colors -->
+
+        <!-- Implicit styles -->
+
+        <Style TargetType="ContentPage"
+               ApplyToDerivedTypes="True">
+            <Setter Property="BackgroundColor"
+                    Value="{DynamicResource AppBackgroundColor}"/>
+            <Setter Property="xct:StatusBarEffect.Color" Value="{DynamicResource AppBackgroundColor}"/>
+        </Style>
+       
+        <Style TargetType="NavigationPage">
+            <Setter Property="BarBackgroundColor" Value="{DynamicResource AppBackgroundColor}"/>
+            <Setter Property="BarTextColor" Value="{DynamicResource FontColor}"/>
+        </Style>
+
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="{DynamicResource FontColor }"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="TextColor" Value="{DynamicResource FontColor }"/>
+        </Style>
+        <Style TargetType="Entry">
+            <Setter Property="TextColor" Value="{DynamicResource FontColor }"/>
+        </Style>
+        <Style TargetType="SearchBar">
+            <Setter Property="TextColor" Value="{DynamicResource FontColor }"/>
+        </Style>
+
+        <Style TargetType="Editor">
+            <Setter Property="TextColor" Value="{DynamicResource FontColor }"/>
+        </Style>
+
+        <Style TargetType="cust:CustomEditor">
+            <Setter Property="TextColor" Value="{DynamicResource FontColor }"/>
+            <Setter Property="PlaceholderColor" Value="{DynamicResource TertiaryColor}"/>
+        </Style>
+        
+        <Style TargetType="cust:CustomEntry">
+            <Setter Property="TextColor" Value="{DynamicResource FontColor }"/>
+            <Setter Property="PlaceholderColor" Value="{DynamicResource TertiaryColor}"/>
+        </Style>
+
+        <Style TargetType="telerikRichTextEditor:RichTextEditorToolbarItem" x:Key="RichTextEditorToolbarItemStyle">
+            <Setter Property="TextColor" Value="{DynamicResource FontColor}"/>
+            <Setter Property="SelectedBackgroundColor" Value="{DynamicResource FontColor}"/>
+            <Setter Property="SelectedColor" Value="White"/>
+            <Setter Property="CheckedBackgroundColor" Value="{DynamicResource FontColor}"/>
+            <Setter Property="CheckedColor" Value="White"/>
+        </Style>
+        <Style TargetType="telerikRichTextEditor:PickerToolbarItem" BasedOn="{StaticResource RichTextEditorToolbarItemStyle}" ApplyToDerivedTypes="True">
+            <Setter Property="ItemStyle">
+                <Setter.Value>
+                    <Style TargetType="telerikDataControls:NonVirtualizedItemsControlItemContainer">
+                        <Setter Property="TextColor" Value="{StaticResource FontColor}"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="telerikRichTextEditor:RichTextEditorToolbarItem" BasedOn="{StaticResource RichTextEditorToolbarItemStyle}" ApplyToDerivedTypes="True"/>
+        
+        <Style TargetType="telerikRichTextEditor:RadRichTextEditorToolbar">
+            <Setter Property="OverflowButtonTextColor" Value="{DynamicResource FontColor}"/>
+            <Setter Property="OpenOverflowButtonTextColor" Value="White"/>
+            <Setter Property="OpenOverflowButtonBackgroundColor" Value="{DynamicResource FontColor}"/>
+            <Setter Property="BackButtonTextColor" Value="{DynamicResource FontColor}"/>
+            <Setter Property="BackgroundColor" Value="{DynamicResource AppBackgroundColor}"/>
+            <Setter Property="BorderColor" Value="{DynamicResource AppBackgroundColor}"/>
+            <Setter Property="BorderThickness" Value="0.1"/>
+        </Style>
+        <Style TargetType="telerikRichTextEditor:DialogPopupContentView">
+            <Setter Property="BackgroundColor" Value="{DynamicResource AppBackgroundColor}"/>
+        </Style>
+        <Style TargetType="Button" x:Key="HyperlinkPopupContentViewButtonStyle">
+            <Setter Property="TextColor" Value="{DynamicResource FontColor}"/>
+        </Style>
+        <Style TargetType="telerikRichTextEditor:HyperlinkPopupContentView" x:Key="HyperlinkPopupContentViewStyle">
+            <Setter Property="CornerRadius" Value="15"/>
+            <Setter Property="BackgroundColor" Value="{DynamicResource AppBackgroundColor}"/>
+            <Setter Property="BorderColor" Value="{DynamicResource AppBackgroundColor}"/>
+            <Setter Property="BorderThickness" Value="0.1"/>
+        </Style>
+
+    </Application.Resources>
+</Application>

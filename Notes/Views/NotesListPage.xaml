@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:conv="clr-namespace:Notes.Helpers"
+             xmlns:controls="clr-namespace:Notes.Controls"
+             xmlns:telerikRichTextEditor="clr-namespace:Telerik.XamarinForms.RichTextEditor;assembly=Telerik.XamarinForms.RichTextEditor"
+             xmlns:telerikPrimitives="clr-namespace:Telerik.XamarinForms.Primitives;assembly=Telerik.XamarinForms.Primitives"
+             x:Class="Notes.Views.NotesListPage"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False" Title="Все заметки"
+             BackgroundColor="{DynamicResource AppBackgroundColor}">
+    <!--<ContentPage.Background>
+        <LinearGradientBrush EndPoint="0,1">
+            <GradientStop Color="#4f497f"
+                          Offset="0.1" />
+            <GradientStop Color="#3f396f"
+                          Offset="0.25" />
+            <GradientStop Color="#2f295f"
+                          Offset="0.5" />
+            <GradientStop Color="#1f194f"
+                          Offset="0.75" />
+            <GradientStop Color="#0f093f"
+                          Offset="1.0" />
+            --><!--<GradientStop Color="#e9e9ff"
+                          Offset="0.1" />
+            <GradientStop Color="#d9d9ff"
+                          Offset="0.25" />
+            <GradientStop Color="#c9c9ff"
+                          Offset="0.5" />
+            <GradientStop Color="#b9b9f0"
+                          Offset="0.75" />
+            <GradientStop Color="#a9a9e0"
+                          Offset="1.0" />--><!--
+        </LinearGradientBrush>
+    </ContentPage.Background>-->
+    <ContentPage.Resources>
+        <Style TargetType="Frame" x:Key="ElemStyle">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" >
+                            <VisualState.Setters>
+                                <Setter TargetName="sel" Property="telerikPrimitives:RadCheckBox.IsChecked" Value="False"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="{DynamicResource TileSelectionColor}" />
+                                <Setter TargetName="sel" Property="telerikPrimitives:RadCheckBox.IsChecked" Value="True"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+        <Style x:Key="ToolbarItem" TargetType="Button">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontFamily" Value="{StaticResource Fontello}"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="WidthRequest" Value="40"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+        
+        <Style x:Key="ToolbarItem2" TargetType="controls:ContextMenuButton">
+            <Setter Property="FontFamily" Value="{StaticResource Fontello}"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="WidthRequest" Value="40"/>
+            <Setter Property="HeightRequest" Value="40"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+        <Style BasedOn="{StaticResource ToolbarItem}" TargetType="Button" x:Key="Style1">
+            <Setter  Property="Text" Value="&#xf00a;"/>
+        </Style>
+        <Style BasedOn="{StaticResource ToolbarItem}" TargetType="Button" x:Key="Style2">
+            <Setter  Property="Text" Value="&#xf009;"/>
+        </Style>
+
+        <Style x:Key="MenuItem" TargetType="Label">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+
+        <ResourceDictionary>
+            <conv:HTMLToStr x:Key="html"/>
+            <conv:HeightConverter x:Key="height"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid Margin="0">
+        <Grid Margin="0" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid HeightRequest="70" Padding="0" Grid.Row="0" BackgroundColor="Transparent" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="clearBtn" Style="{StaticResource ToolbarItem}" IsEnabled="False" Opacity="0" Pressed="ClearSelection" Grid.Column="0" Text="{x:StaticResource clearIcon}" Margin="10,0,-15,0"/>
+                <Button x:Name="menuBtn" Style="{StaticResource ToolbarItem}" Pressed="menuBtn_Pressed" Grid.Column="0" Text="{x:StaticResource menuIcon}" Margin="10,0,-15,0"/>
+                <!--<SearchBar IsVisible="false" IsEnabled="False" VerticalOptions="Center" x:Name="searchBtn" Grid.Column="1" SearchButtonPressed="searchBtn_SearchButtonPressed" TextChanged="searchBtn_TextChanged" />-->
+                <StackLayout  VerticalOptions="Center"  HorizontalOptions="Center"  Grid.Column="1" Orientation="Horizontal" Margin="20,3">
+                    <Label Text="{Binding IconImage}" FontSize="Title" />
+                    <Label Text="{Binding Title}" x:Name="headerLabel" FontSize="Title" LineBreakMode="TailTruncation" />
+                </StackLayout>
+                <!--<Line Margin="20,0,20,10" Grid.Column="1" HeightRequest="2" VerticalOptions="End" BackgroundColor="{Binding TitleColor}"/>-->
+                <Button x:Name="searchBtn" Style="{StaticResource ToolbarItem}" Clicked="searchBtn_Clicked" Grid.Column="3" Text="{x:StaticResource searchIcon}"/>
+                <Label VerticalOptions="Center" Opacity="0" IsEnabled="False" x:Name="countLabel" Grid.Column="2" Margin="0,0,-20,0"/>
+                <Button x:Name="deleteBtn" Style="{StaticResource ToolbarItem}" IsEnabled="False" Opacity="0" Text="{x:StaticResource deleteIcon}" Pressed="deleteBtn_Pressed" Grid.Column="3" />
+                <!--<Button IsVisible="false" IsEnabled="False" x:Name="toggleViewBtn" Style="{StaticResource Style1}" Clicked="toggleView" Grid.Column="4" />-->
+                <Button x:Name="toolBtn" Style="{StaticResource ToolbarItem2}" Grid.Column="5" TextColor="{DynamicResource FontColor}"
+                                           Text="{x:StaticResource toolIcon}" Margin="0,0,10,0" Clicked="toolBtn_Clicked">
+                    <telerikPrimitives:RadPopup.Popup>
+                        <telerikPrimitives:RadPopup x:Name="popup"
+                                    IsModal="False" Placement="Center" AnimationDuration="100" AnimationType="Fade"
+                                    OutsideBackgroundColor="#00000000">
+                            <telerikPrimitives:RadBorder CornerRadius="8"
+                                         BackgroundColor="Transparent">
+                                <StackLayout Padding="10" Background="{DynamicResource MainColor}">
+                                    <Label Style="{StaticResource MenuItem}" Text="{Binding NoteShape}" >
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding ToggleViewCommand}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                    <Label Style="{StaticResource MenuItem}" Text="Настройки">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding SettingsCommand}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </StackLayout>
+                            </telerikPrimitives:RadBorder>
+                        </telerikPrimitives:RadPopup>
+                    </telerikPrimitives:RadPopup.Popup>
+                    <!--<controls:ContextMenuButton.Items>
+                        <MenuItemCollection>
+                            <MenuItem Text="Изменить представление" Command="{Binding ToggleViewCommand}"/>
+                            <MenuItem Text="Настройки" Command="{Binding SettingsCommand}"/>
+                        </MenuItemCollection>
+                    </controls:ContextMenuButton.Items>-->
+                </Button>
+            </Grid>
+                <CollectionView x:Name="MyListView" Margin="5" Opacity="0"
+            ItemsSource="{Binding Items}" Grid.Row="1"
+            SelectionMode="Single" 
+                    SelectionChanged="OnSelectionChanged" >
+                    <CollectionView.ItemsLayout >
+                        <GridItemsLayout Orientation="Vertical" HorizontalItemSpacing="10" VerticalItemSpacing="10" 
+                        Span="2"/>
+                    </CollectionView.ItemsLayout>
+                    <!--Built in Cells-->
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                        <!--xct:TouchEffect.Command="{Binding  PressCommand, Source={RelativeSource AncestorType={x:Type Page}}}"
+                               xct:TouchEffect.CommandParameter="{Binding .}"-->
+                        <Frame Padding="0" Margin="5" CornerRadius="5" 
+                               xct:TouchEffect.LongPressCommand="{Binding  LongPressCommand, Source={RelativeSource AncestorType={x:Type Page}}}"
+                               xct:TouchEffect.LongPressCommandParameter="{Binding .}"
+                            xct:TouchEffect.LongPressDuration="500"
+                               xct:TouchEffect.PressedScale="0.97"
+                               xct:TouchEffect.AnimationDuration="150"
+                            BackgroundColor="{DynamicResource TileBackgroundColor}"
+                                   Style="{StaticResource ElemStyle}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="1"/>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="1"/>
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+                                    <Label LineBreakMode="TailTruncation" FontAttributes="Bold,Italic" Grid.Row="0" Text="{Binding Name}" HorizontalOptions="Center" Padding="10,5,10,0">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Name}" Value="">
+                                                <Setter Property="IsVisible" Value="False"/>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                    <telerikPrimitives:RadCheckBox  x:Name="sel" Grid.Row="0" CheckedColor="{DynamicResource SecondaryColor}" 
+                                                                    HorizontalOptions="End" CheckedSymbolColor="White" Scale="0.6"
+                                                                    IsVisible="{Binding LongPressEnabled, Source={RelativeSource AncestorType={x:Type Page}}}"/>
+                                    <Line Margin="0" Grid.Row="1" BackgroundColor="#13808080" >
+                                        <Line.Triggers>
+                                            <DataTrigger TargetType="Line" Binding="{Binding Name}" Value="">
+                                                <Setter Property="IsVisible" Value="False"/>
+                                            </DataTrigger>
+                                        </Line.Triggers>
+                                    </Line>
+                                    <Label MaxLines="6" Grid.Row="2" Padding="10,0,10,1" HorizontalOptions="Start" VerticalOptions="Start"
+                                Text="{Binding Text, Converter={StaticResource html}}"
+                                LineBreakMode="TailTruncation" >
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Name}" Value="">
+                                                <Setter Property="Grid.Row" Value="0"/>
+                                                <Setter Property="Grid.RowSpan" Value="3"/>
+                                                <Setter Property="Padding" Value="15"/>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                    <!--<telerikRichTextEditor:RadRichTextEditor 
+                                    BackgroundColor="Transparent"  
+                                    Grid.Row="2"
+                                    HeightRequest="80"
+                                    IsReadOnly="True"
+                                    Source="{Binding Text}"/>-->
+                                    <!--<WebView Grid.Row="2" Source="{Binding Text}"/>-->
+
+                                <Line Margin="0" Grid.Row="3" BackgroundColor="#13808080" />
+                                <Label Grid.Row="4" FontSize="Micro" Padding="0,0,10,5"
+                                Text="{Binding Date, StringFormat='{}{0:H:mm    d MMMM yyyy}'}"
+                                FontAttributes="Italic" HorizontalOptions="End" VerticalOptions="End"/>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.EmptyView>
+                        <StackLayout Padding="0,200,0,0" x:Name="EmptyImage" >
+                        <Label TextColor="#a0555555" Text="{StaticResource emptyBoxIcon}" FontSize="50" HorizontalOptions="Center" VerticalOptions="Center" FontFamily="{StaticResource Fontello}" />
+                        <Label TextColor="#a0555555" Text="Заметок нет" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center" />
+                        </StackLayout>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            <StackLayout Grid.Row="1" x:Name="plus" BackgroundColor="Transparent"
+               Margin="0,0,25,25" VerticalOptions="EndAndExpand" HorizontalOptions="EndAndExpand">
+                <Button xct:TouchEffect.PressedScale="0.97" xct:TouchEffect.AnimationDuration="150"
+                    xct:TouchEffect.Command="{Binding  AddPressCommand, Source={RelativeSource AncestorType={x:Type Page}}}"
+                    WidthRequest="60" HeightRequest="60" Padding="10" 
+                    CornerRadius="25" BackgroundColor="{DynamicResource SecondaryColor}" 
+                    FontSize="18" TextColor="White" Text="{StaticResource pencilIcon}" FontFamily="{StaticResource Fontello}" />
+            </StackLayout>
+        </Grid>
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="{DynamicResource FontColor}" VerticalOptions="Center"/>
+    </Grid>
+</ContentPage>

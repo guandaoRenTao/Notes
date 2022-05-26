@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cust="clr-namespace:Notes.Controls"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:conv="clr-namespace:Notes.Helpers"
+             xmlns:telerikRichTextEditor="clr-namespace:Telerik.XamarinForms.RichTextEditor;assembly=Telerik.XamarinForms.RichTextEditor"
+             xmlns:telerikPrimitives="clr-namespace:Telerik.XamarinForms.Primitives;assembly=Telerik.XamarinForms.Primitives"
+             Shell.PresentationMode="Modal"
+             x:Class="Notes.Views.NoteEntryPage">
+    <ContentPage.Resources>
+        <!-- Implicit styles -->
+        <Style TargetType="ContentPage" x:Key="statusBarColor">
+            <Setter Property="xct:StatusBarEffect.Color" Value="{DynamicResource AppBackgroundColor}"/>
+        </Style>
+        <Style TargetType="Frame" x:Key="ElemStyle">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="#50000000" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+        <Style x:Key="ToolbarItem" TargetType="Button">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontFamily" Value="{StaticResource Fontello}"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="WidthRequest" Value="40"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+        
+        <Style x:Key="f" TargetType="telerikRichTextEditor:AddImageToolbarItem">
+            <Setter Property="xct:TouchEffect.State" Value="Pressed"/>
+        </Style>
+        
+        <Style x:Key="MenuItem" TargetType="Label">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <ResourceDictionary>
+            <conv:StrToHTML x:Key="html"/>
+            <conv:HTMLToStr x:Key="htmlToStr"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <!-- Layout children vertically -->
+    <telerikPrimitives:RadPopup.Popup >
+        <telerikPrimitives:RadPopup x:Name="categoryPopup"
+                                    IsModal="False" Placement="Center" AnimationDuration="100" AnimationType="Fade"
+                                    OutsideBackgroundColor="#00000000">
+            <telerikPrimitives:RadBorder CornerRadius="8" 
+                                         BackgroundColor="Transparent">
+                <StackLayout HeightRequest="300" WidthRequest="300" Padding="10" BackgroundColor="{DynamicResource PopupBackgroundColor}">
+                    <Label Text="Выберите категорию" FontSize="Subtitle" HorizontalOptions="Center"/>
+                    <CollectionView SelectionMode="Single" x:Name="foldersList" SelectionChanged="foldersList_SelectionChanged">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Vertical" VerticalItemSpacing="10"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame
+                                   xct:TouchEffect.PressedScale="0.97"
+                                   xct:TouchEffect.AnimationDuration="150"
+                                   Style="{StaticResource ElemStyle}" BackgroundColor="{DynamicResource PopupSecondColor}">
+                                    <Label VerticalOptions="Center" Text="{Binding Name}"/>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
+            </telerikPrimitives:RadBorder>
+        </telerikPrimitives:RadPopup>
+    </telerikPrimitives:RadPopup.Popup>
+    <Grid VerticalOptions="Fill">
+
+        <telerikPrimitives:RadPopup.Popup >
+            <telerikPrimitives:RadPopup x:Name="notifyPopup"
+                                    IsModal="False" Placement="Center" AnimationDuration="100" AnimationType="Fade"
+                                    OutsideBackgroundColor="#00000000">
+                <telerikPrimitives:RadBorder CornerRadius="8" 
+                                         BackgroundColor="Transparent">
+                    <StackLayout HeightRequest="300" WidthRequest="300" Padding="10" BackgroundColor="{DynamicResource PopupBackgroundColor}">
+                        <Label Text="Настройте напоминание" FontSize="Subtitle" HorizontalOptions="Center"/>
+                        <cust:CustomEntry x:Name="reminderTitle" Placeholder="Название"/>
+                        <cust:CustomEntry x:Name="reminderMessage"  Placeholder="Сообщение" />
+                        <DatePicker x:Name="reminderDate" />
+                        <TimePicker x:Name="reminderTime" />
+                        <Button Text="Создать" Clicked="OnScheduleClick"/>
+                    </StackLayout>
+                </telerikPrimitives:RadBorder>
+            </telerikPrimitives:RadPopup>
+        </telerikPrimitives:RadPopup.Popup>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid HeightRequest="70" Padding="0" MinimumHeightRequest="50" Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="StartAndExpand">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Style="{StaticResource ToolbarItem}" x:Name="okBtn"  Text="{StaticResource okIcon}"  Pressed="okBtn_Clicked"/>
+            <Button Grid.Column="2" Style="{StaticResource ToolbarItem}" x:Name="deleteBtn"  Text="{StaticResource deleteIcon}" Pressed="OnDeleteButtonClicked"/>
+            <Button Grid.Column="3" Style="{StaticResource ToolbarItem}" x:Name="toolBtn" Clicked="toolBtn_Clicked" Text="{StaticResource toolIcon}">
+                <telerikPrimitives:RadPopup.Popup>
+                    <telerikPrimitives:RadPopup x:Name="popup"
+                                    IsModal="False" Placement="Center" AnimationDuration="100" AnimationType="Fade"
+                                    OutsideBackgroundColor="#00000000">
+                        <telerikPrimitives:RadBorder CornerRadius="8" 
+                                         BackgroundColor="Transparent">
+                            <StackLayout Padding="10" Background="{DynamicResource MainColor}">
+                                <Label Style="{StaticResource MenuItem}" Text="Напоминание" >
+                                    <Label.GestureRecognizers>
+                                        <!--<TapGestureRecognizer Tapped="reminderTapped"/>-->
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <Label Style="{StaticResource MenuItem}" Text="Поделиться">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="shareTapped"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <Label Style="{StaticResource MenuItem}" Text="Переместить">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="moveTapped"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </StackLayout>
+                        </telerikPrimitives:RadBorder>
+                    </telerikPrimitives:RadPopup>
+                </telerikPrimitives:RadPopup.Popup>
+            </Button>
+        </Grid>
+        
+            <Grid x:Name="textStack" Grid.Row="1" Padding="10" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <cust:CustomEditor Grid.Row="0" x:Name="header" Placeholder="Заголовок" TextChanged="header_TextChanged"  AutoSize="TextChanges" 
+                Text="{Binding Name}" IsSpellCheckEnabled="True" Keyboard="Chat" FontSize="Large" IsTextPredictionEnabled="True"/>
+            <Line Margin="0" Grid.Row="1" HeightRequest="1" BackgroundColor="#13808080" />
+            <Grid ColumnSpacing="0" RowSpacing="0" Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                <telerikRichTextEditor:RadRichTextEditor x:Name="text"  
+                                                             BackgroundColor="{DynamicResource AppBackgroundColor}" 
+                                                             HorizontalOptions="FillAndExpand" 
+                                                             VerticalOptions="FillAndExpand"
+                                                             Source="{Binding Text, Converter={x:StaticResource html}}"
+                                                             PickImage="text_PickImage"
+                                                             >
+                    <telerikPrimitives:RadPopup.Popup>
+                        <telerikPrimitives:RadPopup x:Name="imagePopup"
+                                    IsModal="True" Placement="Center"  AnimationDuration="100" AnimationType="Fade"
+                                    OutsideBackgroundColor="#00000000">
+                            <telerikPrimitives:RadBorder CornerRadius="8" Margin="15"
+                                         BackgroundColor="Transparent">
+                                <StackLayout Padding="10"  BackgroundColor="{DynamicResource PopupBackgroundColor}" WidthRequest="170" HeightRequest="100">
+                                    <Label Text="Вставить рисунок?" HorizontalOptions="CenterAndExpand"/>
+                                    <Grid VerticalOptions="EndAndExpand">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" x:Name="dontPastePictureBtn" Clicked="dontPastePictureBtn_Clicked" BackgroundColor="Transparent" Text="Нет" />
+                                        <telerikRichTextEditor:RadRichTextEditorToolbar Grid.Column="1" BorderColor="Transparent" BackgroundColor="Transparent" RichTextEditor="{x:Reference text}" AutoGenerateItems="False">
+                                            <telerikRichTextEditor:AddImageToolbarItem BackgroundColor="Transparent" Text="Да" TextColor="{DynamicResource FontColor}"/>
+                                        </telerikRichTextEditor:RadRichTextEditorToolbar>
+                                    </Grid>
+                                </StackLayout>
+                            </telerikPrimitives:RadBorder>
+                        </telerikPrimitives:RadPopup>
+                    </telerikPrimitives:RadPopup.Popup>
+                </telerikRichTextEditor:RadRichTextEditor>
+                <Line Margin="5" Grid.Row="1" HeightRequest="1" BackgroundColor="#13808080" />
+                <telerikRichTextEditor:RadRichTextEditorToolbar x:Name="keyboard" Grid.Row="2" RichTextEditor="{x:Reference text}" AutoGenerateItems="False">
+                    <conv:DrawingToolbarItem SelectedBackgroundColor="Transparent" SelectedColor="{DynamicResource FontColor}" 
+                                      Text="{StaticResource pencilIcon}" FontSize="16" FontFamily="{StaticResource Fontello}">
+                        <conv:DrawingToolbarItem.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding  DrawingCommand, Source={RelativeSource AncestorType={x:Type Page}}}"/>
+                        </conv:DrawingToolbarItem.GestureRecognizers>
+                    </conv:DrawingToolbarItem>
+                    <telerikRichTextEditor:ClearFormattingToolbarItem/>
+                    <telerikRichTextEditor:UndоToolbarItem/>
+                    <telerikRichTextEditor:RedоToolbarItem/>
+                    <telerikRichTextEditor:FontFamilyToolbarItem />
+                    <telerikRichTextEditor:FontSizeToolbarItem />
+                    <telerikRichTextEditor:BoldToolbarItem />
+                    <telerikRichTextEditor:ItalicToolbarItem />
+                    <telerikRichTextEditor:UnderlineToolbarItem  />
+                    <telerikRichTextEditor:TextColorToolbarItem />
+                    <telerikRichTextEditor:TextFormattingToolbarItem />
+                    <telerikRichTextEditor:BulletingToolbarItem />
+                    <telerikRichTextEditor:NumberingToolbarItem />
+                    <telerikRichTextEditor:SubscriptToolbarItem  />
+                    <telerikRichTextEditor:SuperscriptToolbarItem />
+                    <telerikRichTextEditor:StrikethroughToolbarItem />
+                    <telerikRichTextEditor:AlignLeftToolbarItem />
+                    <telerikRichTextEditor:AlignCenterToolbarItem/>
+                    <telerikRichTextEditor:AlignRightToolbarItem/>
+                    <telerikRichTextEditor:IndentToolbarItem />
+                    <telerikRichTextEditor:OutdentToolbarItem />
+                    <telerikRichTextEditor:AddHyperlinkToolbarItem />
+                    <telerikRichTextEditor:AddImageToolbarItem x:Name="addImageBtn"/>
+                    
+                </telerikRichTextEditor:RadRichTextEditorToolbar>
+                    
+            </Grid>
+            </Grid>
+        <!--<Grid BackgroundColor="#444" HeightRequest="60" IsEnabled="False" Padding="0" Opacity="0" x:Name="keyboard" MinimumHeightRequest="50"  VerticalOptions="EndAndExpand">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" FontSize="12" Style="{StaticResource ToolbarItem}" Text="&#xe801;" FontFamily="{x:StaticResource Fontello}" x:Name="paint1" Pressed="paint_Pressed" />
+            <Button Grid.Column="1" FontSize="12" Style="{StaticResource ToolbarItem}" Text="&#xe801;" FontFamily="{x:StaticResource Fontello}" x:Name="paint2" Pressed="paint_Pressed" />
+            <Button Grid.Column="2" FontSize="12" Style="{StaticResource ToolbarItem}" Text="&#xe801;" FontFamily="{x:StaticResource Fontello}" x:Name="paint3" Pressed="paint_Pressed" />
+        </Grid>-->
+    </Grid>
+</ContentPage>

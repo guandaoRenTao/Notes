@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Notes.ViewModels"
+             xmlns:conv="clr-namespace:Notes.Helpers" 
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             Shell.PresentationMode="Modal"
+             Shell.NavBarIsVisible="false"
+             x:Class="Notes.Views.PincodePage">
+    <ContentPage.BindingContext>
+        <local:NumbersViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <Style x:Key="F" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="CornerRadius" Value="50"/>
+            <Setter Property="TextColor" Value="{DynamicResource FontColor}"/>
+            <Setter Property="FontSize" Value="25"/>
+            <Setter Property="HeightRequest" Value="80"/>
+            <Setter Property="WidthRequest" Value="80"/>
+            <Setter Property="BorderColor" Value="Silver"/>
+            <Setter Property="BorderWidth" Value="0.4"/>
+            <Setter Property="xct:TouchEffect.PressedScale" Value="0.97"/>
+            <Setter Property="xct:TouchEffect.AnimationDuration" Value="150"/>
+        </Style>
+        
+        <Style x:Key="E" TargetType="ImageButton">
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="HeightRequest" Value="80"/>
+            <Setter Property="WidthRequest" Value="80"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="xct:TouchEffect.PressedScale" Value="0.97"/>
+            <Setter Property="xct:TouchEffect.AnimationDuration" Value="150"/>
+        </Style>
+        <Style x:Key="ToolbarItem" TargetType="Button">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontFamily" Value="{StaticResource Fontello}"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="WidthRequest" Value="40"/>
+            <Setter Property="Margin" Value="20,0,0,0"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+        
+        <Style x:Key="InputEllipse" TargetType="Ellipse">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="WidthRequest" Value="12"/>
+            <Setter Property="HeightRequest" Value="12"/>
+        </Style>
+        <ResourceDictionary>
+            <conv:NumConverter1 x:Key="conv1"/>
+            <conv:NumConverter2 x:Key="conv2"/>
+            <conv:NumConverter3 x:Key="conv3"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid Margin="0" BackgroundColor="{DynamicResource AppBackgroundColor}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid HeightRequest="70" Padding="0" HorizontalOptions="Start"  Grid.Row="0" BackgroundColor="Transparent" VerticalOptions="StartAndExpand">
+                <Button IsEnabled="False" IsVisible="false" Style="{StaticResource ToolbarItem}" x:Name="backBtn"  Text="{StaticResource backIcon}"  Pressed="backBtn_Pressed"/>
+            </Grid>
+            <Grid Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Start" Margin="0,100,0,0" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="2" HorizontalOptions="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Ellipse Grid.Column="0" Fill="{DynamicResource SecondaryColor}" Style="{StaticResource InputEllipse}">
+                        <Ellipse.Triggers>
+                            <DataTrigger TargetType="Ellipse" Binding="{Binding Count}" Value="0">
+                                <Setter Property="Fill" Value="Gray"/>
+                            </DataTrigger>
+                        </Ellipse.Triggers>
+                    </Ellipse>
+                    <Ellipse Grid.Column="1" Fill="Gray" Style="{StaticResource InputEllipse}">
+                        <Ellipse.Triggers>
+                            <DataTrigger TargetType="Ellipse" Binding="{Binding Count, Converter={x:StaticResource conv1}}" Value="True">
+                                <Setter Property="Fill" Value="{DynamicResource SecondaryColor}"/>
+                            </DataTrigger>
+                        </Ellipse.Triggers>
+                    </Ellipse>
+                    <Ellipse Grid.Column="2" Fill="Gray" Style="{StaticResource InputEllipse}">
+                        <Ellipse.Triggers>
+                            <DataTrigger TargetType="Ellipse" Binding="{Binding Count, Converter={x:StaticResource conv2}}" Value="True">
+                                <Setter Property="Fill" Value="{DynamicResource SecondaryColor}"/>
+                            </DataTrigger>
+                        </Ellipse.Triggers>
+                    </Ellipse>
+                    <Ellipse Grid.Column="3" Fill="gray" Style="{StaticResource InputEllipse}">
+                        <Ellipse.Triggers>
+                            <DataTrigger TargetType="Ellipse" Binding="{Binding Count, Converter={x:StaticResource conv3}}" Value="True">
+                                <Setter Property="Fill" Value="{DynamicResource SecondaryColor}"/>
+                            </DataTrigger>
+                        </Ellipse.Triggers>
+                    </Ellipse>
+                    <Ellipse Grid.Column="4" Fill="gray" Style="{StaticResource InputEllipse}">
+                        <Ellipse.Triggers>
+                            <DataTrigger TargetType="Ellipse" Binding="{Binding Count}" Value="5">
+                                <Setter Property="Fill" Value="{DynamicResource SecondaryColor}"/>
+                            </DataTrigger>
+                        </Ellipse.Triggers>
+                    </Ellipse>
+                </Grid>
+                <Label x:Name="lbl" Grid.Row="0" FontSize="Header" HorizontalOptions="Center" Text="Введите ПИН-код:" />
+                <Entry IsVisible="False" IsEnabled="False" TextChanged="pin_TextChanged" Grid.Row="1" Text="{Binding Number}" HorizontalOptions="Center" x:Name="pin" WidthRequest="100" />
+                <Button IsVisible="False" x:Name="clearBtn" Command="{Binding ClearCommand}" IsEnabled="False"/>
+            </Grid>
+            <!--#region  Number Panel -->
+            <StackLayout Grid.Row="2" Margin="0,0,0,40" Spacing="30" Orientation="Vertical"  HorizontalOptions="CenterAndExpand">
+                <StackLayout Orientation="Horizontal" Spacing="30">
+                    <Button Style="{StaticResource F}" Command="{Binding NumberCommand}" CommandParameter="1" Text="1"  />
+                    <Button Style="{StaticResource F}" Command="{Binding NumberCommand}" CommandParameter="2" Text="2" />
+                    <Button Style="{StaticResource F}" Command="{Binding NumberCommand}" CommandParameter="3" Text="3" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal"  Spacing="30">
+                    <Button Style="{StaticResource F}" Command="{Binding NumberCommand}" CommandParameter="4"  Text="4"/>
+                    <Button Style="{StaticResource F}" Command="{Binding NumberCommand}" CommandParameter="5" Text="5" />
+                    <Button Style="{StaticResource F}" Command="{Binding NumberCommand}" CommandParameter="6" Text="6" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal"  Spacing="30">
+                    <Button Style="{StaticResource F}" Command="{Binding NumberCommand}" CommandParameter="7" Text="7" />
+                    <Button  Style="{StaticResource F}" Command="{Binding NumberCommand}" CommandParameter="8" Text="8" />
+                    <Button Style="{StaticResource F}" Command="{Binding NumberCommand}" CommandParameter="9" Text="9" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal"  Spacing="30">
+                    <ImageButton x:Name="fingerPrintBtn" Style="{StaticResource E}" Source="fingerprint.png" Clicked="fingerPrintBtn_Clicked"/>
+                    <Button Style="{StaticResource F}" Command="{Binding NumberCommand}" CommandParameter="0" Text="0"/>
+                    <Button Style="{StaticResource F}" BorderWidth="0" FontSize="30" Command="{Binding BackSpaceCommand}"
+                            Text="{StaticResource backSpaceIcon}" FontFamily="{StaticResource Fontello}" />
+                </StackLayout>
+            </StackLayout>
+            <!--#endregion-->
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+                 xmlns:color="clr-namespace:ColorPicker;assembly=ColorPicker"
+                 xmlns:cust="clr-namespace:Notes.Controls"
+            xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+                 xmlns:xct="http://xamarin.com/schemas/2020/toolkit" 
+                 xmlns:telerikPrimitives="clr-namespace:Telerik.XamarinForms.Primitives;assembly=Telerik.XamarinForms.Primitives"
+                 BackgroundColor="#a0000000"
+             x:Class="Notes.Views.CategoryPopup">
+    <pages:PopupPage.Resources>
+        <Style x:Key="ToolbarItem" TargetType="Button">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontFamily" Value="{StaticResource Fontello}"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="WidthRequest" Value="40"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+        <Style TargetType="Frame" x:Key="ElemStyle">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="DarkGray" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </pages:PopupPage.Resources>
+    <pages:PopupPage.Animation>
+        <animations:ScaleAnimation 
+            PositionIn="Center"
+            PositionOut="Center"
+            ScaleIn="0.8"
+            ScaleOut="0.8"
+            DurationIn="200"
+            DurationOut="200"
+            EasingIn="SinOut"
+            EasingOut="SinIn"
+            HasBackgroundAnimation="True"/>
+    </pages:PopupPage.Animation>
+    <StackLayout Margin="10,140" BackgroundColor="{DynamicResource AppBackgroundColor}" >
+        <StackLayout Orientation="Horizontal">
+            <Button Grid.Row="0" Style="{StaticResource ToolbarItem}" VerticalOptions="Start" HorizontalOptions="Start" x:Name="okBtn"  Text="{StaticResource okIcon}"  Pressed="okBtn_Clicked"/>
+            <Label Grid.Row="0" x:Name="title" Text="Добавление новой категории" FontSize="17"
+               HorizontalOptions="CenterAndExpand"  VerticalOptions="Center"/>
+            <Button Grid.Row="0" Style="{StaticResource ToolbarItem}" VerticalOptions="Start" HorizontalOptions="End" x:Name="deleteBtn"  Text="{StaticResource deleteIcon}"  Pressed="deleteBtn_Pressed"/>
+        </StackLayout>
+        <Label Text="Название категории" Margin="0,50,0,0" HorizontalOptions="Center"  VerticalOptions="Center" />
+        <cust:CustomEntry xct:CornerRadiusEffect.CornerRadius="5" Margin="30,10,30,0"  
+                           Grid.Row="1" BackgroundColor="{DynamicResource TileBackgroundColor}"  
+                           Keyboard="Chat" Placeholder="Название" 
+                           Text="{Binding Name}" x:Name="name"/>
+        <StackLayout Orientation="Horizontal" Margin="0,20" HorizontalOptions="Center">
+            <Label Text="Иконка категории" Margin="10"  VerticalOptions="Center" />
+            <Button x:Name="emojiPicker" FontSize="20" CornerRadius="20"
+                    BorderWidth="0.1" BorderColor="Silver" WidthRequest="60"
+                    VerticalOptions="Center" Clicked="emojiPicker_Clicked" 
+                    Text="{Binding Icon}" BackgroundColor="Transparent">
+                <telerikPrimitives:RadPopup.Popup>
+                    <telerikPrimitives:RadPopup x:Name="emojiPopup"
+                                    IsModal="False" Placement="Center" AnimationDuration="100" AnimationType="Fade"
+                                    OutsideBackgroundColor="#00000000">
+                        <telerikPrimitives:RadBorder CornerRadius="8"
+                                         BackgroundColor="Transparent">
+                            <StackLayout Padding="10" Background="{DynamicResource AppBackgroundColor}">
+                                <Button Style="{StaticResource ToolbarItem}" 
+                                        VerticalOptions="Start" HorizontalOptions="Start" x:Name="ok"  
+                                        Text="{StaticResource okIcon}"  Pressed="ok_Pressed"/>
+                                <CollectionView SelectionMode="Single" x:Name="emojiList" SelectionChanged="emojiList_SelectionChanged" >
+                                    <CollectionView.ItemsLayout>
+                                        <GridItemsLayout Span="5" Orientation="Vertical" />
+                                    </CollectionView.ItemsLayout>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Frame Style="{StaticResource ElemStyle}"  BackgroundColor="{DynamicResource AppBackgroundColor}">
+                                                <Label VerticalOptions="Center" Text="{Binding .}" FontSize="30"/>
+                                            </Frame>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                    <!--<CollectionView.GroupHeaderTemplate>
+                                    <DataTemplate>
+                                        <Label Text="{Binding Name}" FontSize="Large"
+                   FontAttributes="Bold" />
+                                    </DataTemplate>
+                                </CollectionView.GroupHeaderTemplate>-->
+                                </CollectionView>
+                            </StackLayout>
+                        </telerikPrimitives:RadBorder>
+                    </telerikPrimitives:RadPopup>
+                </telerikPrimitives:RadPopup.Popup>
+            </Button>
+        </StackLayout>
+    </StackLayout>
+</pages:PopupPage>

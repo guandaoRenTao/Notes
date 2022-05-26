@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             Shell.PresentationMode="Modal"
+             Shell.NavBarIsVisible="false"
+             x:Class="Notes.Views.SettingsPage">
+    <ContentPage.Resources>
+        <Style TargetType="Frame" x:Key="ElemStyle">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="#23808080" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ColorChangeButton" TargetType="Button">
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="WidthRequest" Value="40"/>
+            <Setter Property="HeightRequest" Value="40"/>
+            <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="xct:TouchEffect.PressedScale" Value="0.97"/>
+            <Setter Property="TextColor" Value="Transparent"/>
+            <Setter Property="Command" Value="{Binding  ChangeColorCommand, Source={RelativeSource AncestorType={x:Type Page}}}"/>
+            <Setter Property="CommandParameter" Value="{Binding Source={RelativeSource Self}, Path=Text}"/>
+        </Style>
+
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid Padding="20" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Text="Настройки" FontSize="Title" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Line Grid.Row="1" BackgroundColor="#13808080" HeightRequest="1" Margin="0,10"/>
+            <Label  Grid.Row="2" Text="Безопасность" HorizontalOptions="Center" FontSize="Medium" TextColor="#70808080"/>
+            <Grid Grid.Row="3" Margin="0,10">
+                <Label FontSize="Medium" VerticalOptions="CenterAndExpand" x:Name="switchLabel1" Text="Вход по ПИН-коду"/>
+                <Switch OnColor="{DynamicResource SecondaryColor}" ThumbColor="{DynamicResource SecondaryColor}" x:Name="switchBtn1" Toggled="switchBtn_Toggled" HeightRequest="{Binding Source={x:Reference switchLabel1}, Path=HeightRequest}"/>
+            </Grid>
+            <Line Grid.Row="4" BackgroundColor="#13808080" HeightRequest="1" Margin="0,10"/>
+            <Label Grid.Row="5" Text="Визуальное представление" HorizontalOptions="Center" FontSize="Medium" TextColor="#70808080"/>
+            <Grid Grid.Row="6" Margin="0,10" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" FontSize="Medium" VerticalOptions="CenterAndExpand" x:Name="switchLabel2" Text="Тёмный режим"/>
+                <Switch Grid.Row="0" OnColor="{DynamicResource SecondaryColor}" Toggled="switchBtn2_Toggled" ThumbColor="{DynamicResource SecondaryColor}" x:Name="switchBtn2"  HeightRequest="{Binding Source={x:Reference switchLabel2}, Path=HeightRequest}"/>
+                <Label Grid.Row="1" FontSize="Medium" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Text="Цвет акцента"/>
+                <StackLayout Grid.Row="2" Orientation="Horizontal" HorizontalOptions="Center" Spacing="20">
+                    <Button Background="#6b2224" Text="Red" Style="{StaticResource ColorChangeButton}"/>
+                    <Button Background="#244024" Text="Green" Style="{StaticResource ColorChangeButton}"/>
+                    <Button Background="#324580" Text="Blue" Style="{StaticResource ColorChangeButton}"/>
+                    <Button Background="#4a3161" Text="Purple" Style="{StaticResource ColorChangeButton}"/>
+                    <Button Background="Salmon"  Text="Salmon" Style="{StaticResource ColorChangeButton}"/>
+                </StackLayout>
+            </Grid>
+            <Line Grid.Row="7" BackgroundColor="#13808080" HeightRequest="1" Margin="0,10"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

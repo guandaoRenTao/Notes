@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 xmlns:color="clr-namespace:ColorPicker;assembly=ColorPicker"
+                 xmlns:telerikPrimitives="clr-namespace:Telerik.XamarinForms.Primitives;assembly=Telerik.XamarinForms.Primitives"
+            xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+                 xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+             xmlns:tt="clr-namespace:Notes.TouchTracking"
+                 xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+           BackgroundColor="Transparent"
+             x:Class="Notes.Views.PaintingPage">
+    <pages:PopupPage.Resources>
+        <Style x:Key="ToolbarItem" TargetType="Button">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontFamily" Value="{StaticResource Fontello}"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="TextColor" Value="Black"/>
+            <Setter Property="WidthRequest" Value="40"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+        <Style x:Key="ToolbarItem1" TargetType="ImageButton">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="WidthRequest" Value="40"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+        <Style x:Key="ColorSlider" TargetType="Slider">
+            <Setter Property="Maximum" Value="255"/>
+            <Setter Property="Minimum" Value="0"/>
+            <Setter Property="Scale" Value="1.9"/>
+            <Setter Property="Margin" Value="50,10"/>
+        </Style>
+    </pages:PopupPage.Resources>
+    <pages:PopupPage.Animation>
+        <animations:ScaleAnimation 
+            PositionIn="Center"
+            PositionOut="Center"
+            ScaleIn="0.8"
+            ScaleOut="0.8"
+            DurationIn="200"
+            DurationOut="200"
+            EasingIn="SinOut"
+            EasingOut="SinIn"
+            HasBackgroundAnimation="True"/>
+    </pages:PopupPage.Animation>
+    <pages:PopupPage.Content>
+        <Grid Margin="0,-50,0,0" BackgroundColor="White" RowSpacing="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <StackLayout Orientation="Horizontal" Padding="0,50,0,0" HeightRequest="70" Grid.Row="0" BackgroundColor="White">
+                <Button Style="{StaticResource ToolbarItem}" x:Name="okBtn"  Text="{StaticResource okIcon}"  Clicked="okBtn_Clicked" HorizontalOptions="Start"/>
+                <Button Style="{StaticResource ToolbarItem}" x:Name="clearBtn" Clicked="clearBtn_Clicked" Text="{StaticResource clearIcon}" HorizontalOptions="EndAndExpand"/>
+            </StackLayout>
+            <Grid Grid.Row="1" BackgroundColor="#f5f5ff"
+              VerticalOptions="FillAndExpand">
+                <skia:SKCanvasView x:Name="canvasView"
+                               PaintSurface="OnCanvasViewPaintSurface" />
+                <Grid.Effects>
+                    <tt:TouchEffect Capture="True"
+                                TouchAction="OnTouchEffectAction" />
+                </Grid.Effects>
+            </Grid>
+            <StackLayout HorizontalOptions="CenterAndExpand" Orientation="Horizontal" HeightRequest="70" Grid.Row="2" BackgroundColor="White">
+                <telerikPrimitives:RadPopup.Popup>
+                    <telerikPrimitives:RadPopup x:Name="colorPopup"
+                                    IsModal="False" Placement="Top" AnimationDuration="100" AnimationType="Fade"
+                                    OutsideBackgroundColor="#00000000">
+                        <telerikPrimitives:RadBorder Margin="10,-1" CornerRadius="8"
+                                         BackgroundColor="Transparent">
+                            <StackLayout Padding="40"  BackgroundColor="#555555" WidthRequest="300" HeightRequest="150">
+                                <StackLayout Margin="0,-20,0,20" Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                                    <Label Text="Текущий цвет: " TextColor="White" VerticalOptions="Center"/>
+                                    <Ellipse WidthRequest="30" HeightRequest="30" Fill="{Binding CurrentColor}" />
+                                </StackLayout>
+                                <Slider ThumbColor="DarkRed" MinimumTrackColor="DarkRed" Style="{StaticResource ColorSlider}" Value="{Binding ColorR, Mode=TwoWay}"/>
+                                <Slider ThumbColor="DarkGreen" MinimumTrackColor="DarkGreen" Style="{StaticResource ColorSlider}" Value="{Binding ColorG, Mode=TwoWay}"/>
+                                <Slider ThumbColor="DarkBlue" MinimumTrackColor="DarkBlue" Style="{StaticResource ColorSlider}" Value="{Binding ColorB, Mode=TwoWay}"/>
+                                <!--<Slider Minimum="0" Maximum="50" Value="{Binding PathWidth, Mode=TwoWay}"/>-->
+                            </StackLayout>
+                            
+                        </telerikPrimitives:RadBorder>
+                    </telerikPrimitives:RadPopup>
+                </telerikPrimitives:RadPopup.Popup>
+                <Button Style="{StaticResource ToolbarItem}" x:Name="undo" IsEnabled="{Binding IsUndoEnabled}"  Text="{StaticResource undoIcon}" Clicked="undo_Clicked"/>
+                <Button Style="{StaticResource ToolbarItem}" x:Name="redo" IsEnabled="{Binding IsRedoEnabled}"  Text="{StaticResource redoIcon}" Clicked="redo_Clicked"/>
+                <Button Style="{StaticResource ToolbarItem}" x:Name="color"  Text="{StaticResource tintIcon}" Clicked="color_Clicked"/>
+                <ImageButton  Style="{StaticResource ToolbarItem1}" x:Name="thickness" Clicked="thickness_Clicked"  Source="icon.png">
+                    <telerikPrimitives:RadPopup.Popup>
+                        <telerikPrimitives:RadPopup x:Name="thicknessPopup"
+                                    IsModal="False"  AnimationDuration="100" AnimationType="Fade"
+                                    OutsideBackgroundColor="#00000000">
+                            <telerikPrimitives:RadBorder CornerRadius="8" Margin="15"
+                                         BackgroundColor="Transparent">
+                                <StackLayout Padding="10"  BackgroundColor="#555555" WidthRequest="170" HeightRequest="170">
+                                    <BoxView HeightRequest="{Binding PathWidth}" WidthRequest="{Binding PathWidth}" CornerRadius="100" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"  BackgroundColor="{Binding CurrentColor}" />
+                                    <Stepper Maximum="100" Minimum="10" Increment="10" Value="{Binding PathWidth, Mode=TwoWay}"/>
+                                </StackLayout>
+                            </telerikPrimitives:RadBorder>
+                        </telerikPrimitives:RadPopup>
+                    </telerikPrimitives:RadPopup.Popup>
+                </ImageButton>
+                <Button Style="{StaticResource ToolbarItem}" x:Name="erase" Clicked="erase_Clicked" Text="{StaticResource eraserIcon}" />
+            </StackLayout>
+        </Grid>
+    </pages:PopupPage.Content>
+</pages:PopupPage>
